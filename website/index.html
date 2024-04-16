@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="We present an extensive study of the promotion of illicit goods and services on Twitter.">
+  <meta name="keywords" content="Twitter, Illicit Promotion">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Shining Light into the Tunnel: Understanding and Classifying Network Traffic of Residential Proxies</title>
+  <style>
+    img {
+        display: block;
+        margin: 0 auto; /* 设置左右外边距为 auto */
+    }
+  </style>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-PYVRSFMDRL');
+  </script>
+  <script>
+    function showText() {
+        var contactText = document.getElementById("contact-text");
+        if (contactText.style.display === "none") {
+            contactText.style.display = "block"; // 或者 "block"，取决于您希望它在哪种布局中显示
+        } else {
+            contactText.style.display = "none";
+        }
+    }
+  </script>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/favicon.svg">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+</head>
+<body>
+  
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title">Shining Light into the Tunnel: Understanding and Classifying Network Traffic of Residential Proxies</h1>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              Ronghong Huang<sup>1</sup>,</span>
+            <span class="author-block">
+              Dongfang Zhao<sup>2</sup>,</span>
+            <span class="author-block">
+              <a href="https://xianghang.me/zh/">Xianghang Mi</a><sup>1</sup>,
+            </span>
+            <span class="author-block">
+              XiaoFeng Wang<sup>2</sup>,
+            </span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>1</sup>University of Science and Technology of China,</span>
+            <span class="author-block"><sup>2</sup>Indiana University Bloomington</span>
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- PDF Link. -->
+              <span class="link-block">
+                <a href=""  
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Paper</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href=""
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>arXiv</span>
+                </a>
+              </span>
+              <!-- Code Link. -->
+              <span class="link-block">
+                <a href="https://github.com/ChaseSecurity/bandwidth_sharing"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                  </a>
+              </span>
+              <!-- Dataset Link. -->
+              <span class="link-block">
+                <a href="#"
+                   class="external-link button is-normal is-rounded is-dark" onclick="showText()">
+                  <span class="icon">
+                      <i class="far fa-images"></i>
+                  </span>
+                  <span>Data</span>
+                  </a>
+              </span>
+              <span id="contact-text" style="display: none;">
+                To avoid misuse by miscreants, the dataset will be provided upon request and background checking.
+                Please contact <a href="mailto:ronghonghuang@mail.ustc.edu.cn">ronghonghuang@mail.ustc.edu.cn</a> and apply for the dataset.
+              </span>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Abstract. -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            Emerging in recent years, residential proxies (RESIPs) feature multiple unique characteristics when compared with traditional network proxies (e.g., commercial VPNs), particularly, the deployment in residential networks rather than data center networks, the worldwide distribution in tens of thousands of cities and ISPs, and the large scale of millions of exit nodes. All these factors allow RESIP users to effectively masquerade their traffic flows as ones from authentic residential users, which leads to the increasing adoption of RESIP services, especially in malicious online activities.    
+          </p>
+          <p>
+            However, regarding the (malicious) usage of RESIPs (i.e., what traffic is relayed by RESIPs), current understanding turns out to be insufficient. Particularly,  previous works on RESIP traffic studied only the maliciousness of web traffic destinations and the suspicious patterns of visiting popular websites.
+          </p>
+          <p>
+            Also, a general methodology is missing regarding capturing large-scale RESIP traffic and analyzing RESIP traffic for security risks.  
+          </p>
+          <p>
+            Furthermore, considering many RESIP nodes are found to be located in corporate networks and are deployed without proper authorization from device owners or network administrators, it is becoming increasingly necessary to detect and block RESIP traffic flows, which unfortunately is impeded by the scarcity of realistic RESIP traffic datasets and effective detection methodologies.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Abstract. -->
+
+<!-- Background. -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column">
+        <h2 class="title is-3">Residential proxies</h2>
+        <div class="content has-text-justified">
+          <div class="content">
+            <img src="./static/images/rpaas_illustration.png" alt="Methodology Pipeline">
+          </div>
+          <p>
+            Residential proxies (RESIP) are web proxies located in either residential or cellular networks. As illustrated in Figure, a typical RESIP works in a backconnect mode wherein proxy traffic sourced from a proxy customer will be first sent to the gateway server, which in turn forwards the traffic to a RESIP node, before exiting to the traffic destination. 
+            What's more, most RESIP services will allow proxy customers to specify where they want to exit the relayed traffic, in terms of countries and cities. Also, proxy customers are able to stick their traffic to the same exit node, either through passing the same session id or connecting to some sticky proxy gateways which usually bind to an exit node for every 5 or 10 minutes. 
+          </p>
+          <ul>
+        </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Background. -->
+
+<!-- Methodology. -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column">
+        <h2 class="title is-3">Methodology</h2>
+        <div class="content has-text-justified">
+          <div class="content">
+            <img src="./static/images/rpaas_methodology_v3.png" alt="Methodology Pipeline">
+          </div>
+          <ul>
+            <li>The RESIP Traffic Collector</li>
+            <p>
+              To collect RESIP traffic, a RESIP traffic collector is built up, which consists of two major components: a set of RESIP node runners and a central RESIP node dispatcher (i.e., controller). Specifically, the dispatcher is designed to instruct the RESIP node runners regarding how to deploy RESIP nodes and how to back up the resulting network traffic along with other log files.On the other hand, a RESIP node runner is responsible for running a RESIP node for a period of time by following deployment instructions from the central dispatcher.
+            </p>
+            <li>The RESIP Node Collector</li>
+            <p>
+              As illustrated in Figure, to capture RESIP nodes,  web clients and web servers are first deployed under our control. Then,  probes in the form of simple HTTP requests will be sent from web clients, forwarded through proxy gateway servers, exited at RESIP nodes, before reaching the web servers. Through this process, the web servers will be able to observe the public IP address of each involved RESIP node.
+            </p>
+            <li>The RESIP Traffic Analyzer</li>
+            <p>
+              The large scale of the captured RESIP traffic renders manual analysis impractical. Therefore, a RESIP traffic analyzer consisting of multiple traffic processing modules was designed and implemented. It contains the following five parts:
+              <ul>
+                <li>Signature-Based RESIP Traffic Classification</li>
+                <li>Traffic destination addresses extraction</li>
+                <li>Querying and analyzing threat intelligence of traffic desti-
+                nations</li>
+                <li>Abnormal traffic analysis</li>
+                <li>RESIP usage analysis</li>
+              </ul>
+            </p>
+        </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Methodology. -->
+
+<!-- Finding. -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column">
+        <h2 class="title is-3">Traffic Towards Sensitive Websites</h2>
+        <div class="content has-text-justified">
+          <div class="content">
+          </div>
+            <p>
+              We observe that miscreants have been abusing RESIPs to relay their visiting traffic towards security-sensitive websites. This allows miscreants to masquerade their visits as benign from local residents and thus lower the possibility of being detected or even blocked. 
+            </p>
+            <ul>
+              <li>Visiting government/military/education websites</li>
+              <p>
+                A website is typically considered as security sensitive when it is operated by government agencies, military organizations, or educational institutions. Such websites tend to be registered under special suffixes, e.g., a government website usually has the gov in its suffix while it is edu for education websites, and mil for military ones.  In total,  20,713 traffic flows have been observed to visit one of 316 government websites, 9 military websites, and 560 education websites. Among these flows, 89.62% were through HTTPs while the remaining flows were through HTTP. 
+              </p>
+              <li>Visiting sensitive websites running on unusual TCP ports</li>
+              <p>
+                Many RESIP flows were found to be visits towards sensitive websites that appear to be not intended for public access.   In total, we have manually confirmed suspicious traffic towards 73 different security-sensitive websites. These websites belong to diverse categories, e.g., industrial control systems, airport control systems, watering control systems, remote desktops inside government agencies, etc.  Also,  all of these websites are located in China, and visits to these websites were relayed through RESIP nodes deployed in China. 
+              </p>
+            </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Finding. -->
+
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>
+      <!-- BibTex -->
+    </code></pre>
+  </div>
+</section>
+
+
+<footer class="footer">
+  <div class="container">
+    <div class="content has-text-centered">
+      <a class="icon-link"
+         href="./static/videos/nerfies_paper.pdf">
+        <i class="fas fa-file-pdf"></i>
+      </a>
+      <a class="icon-link" href="https://github.com/keunhong" class="external-link" disabled>
+        <i class="fab fa-github"></i>
+      </a>
+    </div>
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            This website is licensed under a <a rel="license"
+                                                href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+            Commons Attribution-ShareAlike 4.0 International License</a>.
+          </p>
+          <p>
+            This means you are free to borrow the <a
+              href="https://github.com/nerfies/nerfies.github.io">source code</a> of this website,
+            we just ask that you link back to this page in the footer.
+            Please remember to remove the analytics code included in the header of the website which
+            you do not want on your website.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

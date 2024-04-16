@@ -1,0 +1,3 @@
+- `gen_statistics.py`: Generate TimePeriod, Days, Size, SizeBytes of bs_traffic_cn/us.
+  - Usage: `python3 gen_statistics.py`
+  - [ ] skip files with invalid tcpdump header error. For now, those files return 0s but their size are still counted.

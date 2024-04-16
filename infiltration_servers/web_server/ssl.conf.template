@@ -1,0 +1,20 @@
+#Listen 443
+<VirtualHost *:443>
+	ServerName rpaas.site
+	ServerAlias *.rpaas.site
+	#ServerAlias mixingzhi.site rpaas.site rpaas-*.site
+	ServerAdmin webmaster@localhost
+	DocumentRoot /home/<USER>/webspace/webproxy/
+    LogFormat "%h %l %u %t \"%r\" %>s %b Host: %{Host}i Refer: \"%{Referer}i\" UA: \"%{User-agent}i\" requestId: \"%{x-request-id}i\"" webproxyLog
+	ErrorLog ${APACHE_LOG_DIR}/error_webproxy_ssl.log
+	CustomLog ${APACHE_LOG_DIR}/access_webproxy_ssl.log webproxyLog
+	CustomLog "|/usr/bin/rotatelogs /home/<USER>/logs/webproxy/%Y_%m_%d.access_webproxy_ssl.log 86400" webproxyLog
+	ErrorLog  "|/usr/bin/rotatelogs /home/<USER>/logs/webproxy/%Y_%m_%d.error_webproxy_ssl.log 86400"
+	RewriteEngine On
+	RewriteRule "^/click[^/]*/.+$" "/index.php" [L]
+    RewriteRule "^/aesclick[^/]*/.+$" "/index1.php" [L]
+    SSLEngine off
+   # SSLCertificateKeyFile "/home/<USER>/webspace/certificates/rpaas.site.key"
+   # SSLCertificateFile "/home/<USER>/webspace/certificates/rpaas_site.crt"
+   # SSLCACertificateFile "/home/<USER>/webspace/certificates/rpaas_site.ca-bundle"
+</VirtualHost>

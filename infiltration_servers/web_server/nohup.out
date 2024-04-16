@@ -1,0 +1,119 @@
+tcpdump: listening on any, link-type LINUX_SLL (Linux cooked v1), capture size 262144 bytes
+tcpdump: /home/ubuntu/logs/tcpdump/2022-04-05-06_tcpdump.pcap: Permission denied
+tcpdump: listening on any, link-type LINUX_SLL (Linux cooked v1), capture size 262144 bytes
+tcpdump: /home/ubuntu/logs/tcpdump/2022-04-14-15_tcpdump.pcap: Permission denied
+tcpdump: listening on any, link-type LINUX_SLL (Linux cooked v1), capture size 262144 bytes
+6313 packets captured
+6781 packets received by filter
+0 packets dropped by kernel
+tcpdump: listening on any, link-type LINUX_SLL (Linux cooked v1), capture size 262144 bytes
+tcpdump: listening on any, link-type LINUX_SLL (Linux cooked v1), capture size 262144 bytes
+tcpdump: listening on any, link-type LINUX_SLL (Linux cooked v1), capture size 262144 bytes
+tcpdump: listening on any, link-type LINUX_SLL (Linux cooked v1), capture size 262144 bytes
+tcpdump: /home/ubuntu/logs/tcpdump/2022-04-17-10_tcpdump.pcap: Permission denied
+tcpdump: /home/ubuntu/logs/tcpdump/2022-04-17-10_tcpdump.pcap: Permission denied
+tcpdump: /home/ubuntu/logs/tcpdump/2022-04-17-10_tcpdump.pcap: Permission denied
+tcpdump: /home/ubuntu/logs/tcpdump/2022-04-17-10_tcpdump.pcap: Permission denied
+tcpdump: listening on any, link-type LINUX_SLL (Linux cooked v1), capture size 262144 bytes
+tcpdump: listening on any, link-type LINUX_SLL (Linux cooked v1), capture size 262144 bytes
+tcpdump: listening on any, link-type LINUX_SLL (Linux cooked v1), capture size 262144 bytes
+tcpdump: listening on any, link-type LINUX_SLL (Linux cooked v1), capture size 262144 bytes
+tcpdump: listening on any, link-type LINUX_SLL (Linux cooked v1), capture size 262144 bytes
+154 packets captured
+234 packets received by filter
+0 packets dropped by kernel
+tcpdump: listening on any, link-type LINUX_SLL (Linux cooked v1), capture size 262144 bytes
+150 packets captured
+230 packets received by filter
+0 packets dropped by kernel
+tcpdump: listening on any, link-type LINUX_SLL (Linux cooked v1), capture size 262144 bytes
+tcpdump: listening on any, link-type LINUX_SLL (Linux cooked v1), capture size 262144 bytes
+tcpdump: /home/ubuntu/logs/tcpdump/2022-04-17-12_tcpdump.pcap: Permission denied
+tcpdump: /home/ubuntu/logs/tcpdump/2022-04-17-12_tcpdump.pcap: Permission denied
+tcpdump: listening on any, link-type LINUX_SLL (Linux cooked v1), capture size 262144 bytes
+tcpdump: listening on any, link-type LINUX_SLL (Linux cooked v1), capture size 262144 bytes
+202 packets captured
+318 packets received by filter
+0 packets dropped by kernel
+tcpdump: /home/ubuntu/logs/tcpdump/2022-04-17-13_tcpdump.pcap: Permission denied
+tcpdump: /home/ubuntu/logs/tcpdump/2022-04-17-13_tcpdump.pcap: Permission denied
+tcpdump: /home/ubuntu/logs/tcpdump/2022-04-17-13_tcpdump.pcap: Permission denied
+tcpdump: /home/ubuntu/logs/tcpdump/2022-04-17-13_tcpdump.pcap: Permission denied
+tcpdump: /home/ubuntu/logs/tcpdump/2022-04-17-13_tcpdump.pcap: Permission denied
+tcpdump: listening on any, link-type LINUX_SLL (Linux cooked v1), capture size 262144 bytes
+tcpdump: listening on any, link-type LINUX_SLL (Linux cooked v1), capture size 262144 bytes
+tcpdump: Couldn't change ownership of savefile
+tcpdump: Couldn't change ownership of savefile
+tcpdump: /home/ubuntu/logs/tcpdump/2022-04-17-15_tcpdump.pcap: Permission denied
+tcpdump: /home/ubuntu/logs/tcpdump/2022-04-17-15_tcpdump.pcap: Permission denied
+tcpdump: Couldn't change ownership of savefile
+tcpdump: Couldn't change ownership of savefile
+tcpdump: Couldn't change ownership of savefile
+tcpdump: Couldn't change ownership of savefile
+tcpdump: Couldn't change ownership of savefile
+tcpdump: listening on any, link-type LINUX_SLL (Linux cooked v1), capture size 262144 bytes
+tcpdump: /home/ubuntu/logs/tcpdump/2022-04-21-07_tcpdump.pcap: Permission denied
+tcpdump: listening on any, link-type LINUX_SLL (Linux cooked v1), capture size 262144 bytes
+tcpdump: /home/ubuntu/logs/tcpdump/2022-04-25-05_tcpdump.pcap: Permission denied
+tcpdump: listening on any, link-type LINUX_SLL (Linux cooked v1), capture size 262144 bytes
+tcpdump: /home/ubuntu/logs/tcpdump/2022-04-28-09_tcpdump.pcap: Permission denied
+tcpdump: listening on any, link-type LINUX_SLL (Linux cooked v1), capture size 262144 bytes
+tcpdump: listening on any, link-type LINUX_SLL (Linux cooked v1), capture size 262144 bytes
+tcpdump: /home/ubuntu/logs/tcpdump/2022-04-28-18_tcpdump.pcap: Permission denied
+tcpdump: /home/ubuntu/logs/tcpdump/2022-04-28-18_tcpdump.pcap: Permission denied
+tcpdump: listening on any, link-type LINUX_SLL (Linux cooked v1), capture size 262144 bytes
+tcpdump: /home/ubuntu/logs/tcpdump/2022-04-29-11_tcpdump.pcap: Permission denied
+tcpdump: listening on any, link-type LINUX_SLL (Linux cooked v1), capture size 262144 bytes
+655 packets captured
+783 packets received by filter
+0 packets dropped by kernel
+tcpdump: listening on any, link-type LINUX_SLL (Linux cooked v1), capture size 262144 bytes
+501 packets captured
+647 packets received by filter
+0 packets dropped by kernel
+tcpdump: listening on any, link-type LINUX_SLL (Linux cooked v1), capture size 262144 bytes
+tcpdump: listening on any, link-type LINUX_SLL (Linux cooked v1), capture size 262144 bytes
+599 packets captured
+751 packets received by filter
+0 packets dropped by kernel
+tcpdump: listening on any, link-type LINUX_SLL (Linux cooked v1), capture size 262144 bytes
+tcpdump: /home/ubuntu/logs/tcpdump/2022-05-02-07_tcpdump.pcap: Permission denied
+tcpdump: /home/ubuntu/logs/tcpdump/2022-05-02-07_tcpdump.pcap: Permission denied
+tcpdump: listening on any, link-type LINUX_SLL (Linux cooked v1), capture size 262144 bytes
+254 packets captured
+391 packets received by filter
+0 packets dropped by kernel
+tcpdump: listening on any, link-type LINUX_SLL (Linux cooked v1), capture size 262144 bytes
+378 packets captured
+559 packets received by filter
+0 packets dropped by kernel
+tcpdump: listening on any, link-type LINUX_SLL (Linux cooked v1), capture size 262144 bytes
+tcpdump: listening on any, link-type LINUX_SLL (Linux cooked v1), capture size 262144 bytes
+tcpdump: listening on any, link-type LINUX_SLL (Linux cooked v1), capture size 262144 bytes
+tcpdump: listening on any, link-type LINUX_SLL (Linux cooked v1), capture size 262144 bytes
+tcpdump: listening on any, link-type LINUX_SLL (Linux cooked v1), capture size 262144 bytes
+tcpdump: listening on any, link-type LINUX_SLL (Linux cooked v1), capture size 262144 bytes
+tcpdump: listening on any, link-type LINUX_SLL (Linux cooked v1), capture size 262144 bytes
+tcpdump: listening on any, link-type LINUX_SLL (Linux cooked v1), capture size 262144 bytes
+tcpdump: listening on any, link-type LINUX_SLL (Linux cooked v1), capture size 262144 bytes
+tcpdump: listening on any, link-type LINUX_SLL (Linux cooked v1), capture size 262144 bytes
+tcpdump: listening on any, link-type LINUX_SLL (Linux cooked v1), capture size 262144 bytes
+tcpdump: listening on any, link-type LINUX_SLL (Linux cooked v1), capture size 262144 bytes
+tcpdump: /home/ubuntu/logs/tcpdump/2022-05-05-14_tcpdump.pcap: Permission denied
+tcpdump: /home/ubuntu/logs/tcpdump/2022-05-05-14_tcpdump.pcap: Permission denied
+tcpdump: /home/ubuntu/logs/tcpdump/2022-05-05-14_tcpdump.pcap: Permission denied
+tcpdump: /home/ubuntu/logs/tcpdump/2022-05-05-14_tcpdump.pcap: Permission denied
+tcpdump: /home/ubuntu/logs/tcpdump/2022-05-05-14_tcpdump.pcap: Permission denied
+tcpdump: /home/ubuntu/logs/tcpdump/2022-05-05-14_tcpdump.pcap: Permission denied
+tcpdump: /home/ubuntu/logs/tcpdump/2022-05-05-14_tcpdump.pcap: Permission denied
+tcpdump: /home/ubuntu/logs/tcpdump/2022-05-05-14_tcpdump.pcap: Permission denied
+tcpdump: /home/ubuntu/logs/tcpdump/2022-05-05-14_tcpdump.pcap: Permission denied
+tcpdump: /home/ubuntu/logs/tcpdump/2022-05-05-14_tcpdump.pcap: Permission denied
+tcpdump: /home/ubuntu/logs/tcpdump/2022-05-05-14_tcpdump.pcap: Permission denied
+tcpdump: /home/ubuntu/logs/tcpdump/2022-05-05-16_tcpdump.pcap: Permission denied
+tcpdump: listening on any, link-type LINUX_SLL (Linux cooked v1), capture size 262144 bytes
+tcpdump: /home/ubuntu/logs/tcpdump/2022-05-06-12_tcpdump.pcap: Permission denied
+tcpdump: listening on any, link-type LINUX_SLL (Linux cooked v1), capture size 262144 bytes
+tcpdump: listening on any, link-type LINUX_SLL (Linux cooked v1), capture size 262144 bytes
+tcpdump: /home/ubuntu/logs/tcpdump/2022-05-09-05_tcpdump.pcap: Permission denied
+tcpdump: /home/ubuntu/logs/tcpdump/2022-05-09-05_tcpdump.pcap: Permission denied

@@ -1,0 +1,7 @@
+FROM ubuntu
+WORKDIR /app
+RUN apt-get update
+RUN apt-get install -y ca-certificates
+COPY nanowire /app/nanowire
+COPY nanowire.toml /app/nanowire.toml
+CMD ./nanowire sell

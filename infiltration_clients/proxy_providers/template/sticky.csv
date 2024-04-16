@@ -1,0 +1,2 @@
+# host\t port \t sticky_time
+proxy.packetstream.io,31112,3600

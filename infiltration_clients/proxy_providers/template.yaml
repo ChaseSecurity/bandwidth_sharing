@@ -1,0 +1,21 @@
+id: packetstream.io # required
+name: packetstream # required
+user: cchow # optional
+passwd: ZowwdcC1svivu7pK # optional
+proxy_type: http|https # optional
+is_sticky: yes # optional
+proxies: # required
+    # for sticky file, each line contains proxy_ip\tproxy_port\tsticky_time\n
+    - file: template/sticky.csv # tab separated fields
+      user: cchow # optional
+      passwd: ZowwdcC1svivu7pK # optional
+      proxy_type: http|https # optional
+      is_sticky: yes # optional
+      sep: ","
+    # for non-sticky file, each line contains proxy_ip\tproxy_port\n
+    - file: template/nonsticky.csv
+      user:
+      passwd:
+      proxy_type: http|https
+      is_sticky: no
+      sep: ","

@@ -1,0 +1,70 @@
+//
+// Do any local configuration here
+//
+
+// Consider adding the 1918 zones here, if they are not used in your
+// organization
+//include "/etc/bind/zones.rfc1918";
+//zone "mixingzhi.site" {
+//     type master;
+//     file "/etc/bind/db.mixingzhi.site";
+//};
+//zone "servicehosting.org" {
+//     type master;
+//     file "/etc/bind/db.servicehosting.org";
+//};
+//zone "servicehosting.site" {
+//     type master;
+//     file "/etc/bind/db.servicehosting.site";
+//};
+//zone "rpaas.site" {
+//     type master;
+//     file "/etc/bind/db.rpaas.site";
+//};
+//zone "rpaas-china.site" {
+//     type master;
+//     file "/etc/bind/db.rpaas-china.site";
+//};
+//zone "rpaas-pacific.site" {
+//     type master;
+//     file "/etc/bind/db.rpaas-pacific.site";
+//};
+//zone "rpaas-eu.site" {
+//     type master;
+//     file "/etc/bind/db.rpaas-eu.site";
+//};
+//zone "rpaas-india.site" {
+//     type master;
+//     file "/etc/bind/db.rpaas-india.site";
+//};
+//zone "rpaas-brazil.site" {
+//     type master;
+//     file "/etc/bind/db.rpaas-brazil.site";
+//};
+zone "mpaas.shop" {
+     type master;
+     file "/etc/bind/db.mpaas.shop";
+};
+logging {
+    channel query.log {
+        file "/var/lib/bind/query.log" versions unlimited size 20m;
+        // Set the severity to dynamic to see all the debug messages.
+        severity debug 3;
+		print-time yes;
+		print-severity yes;
+		print-category yes;
+
+    };  
+    channel default.log {
+        file "/var/lib/bind/default.log" versions unlimited size 20m;
+        // Set the severity to dynamic to see all the debug messages.
+        severity debug 3;
+		print-time yes;
+		print-severity yes;
+		print-category yes;
+
+    };  
+
+    category queries { query.log; default.log;};
+    category default { default.log; };
+};

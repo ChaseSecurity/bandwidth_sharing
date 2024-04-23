@@ -12,6 +12,22 @@
         display: block;
         margin: 0 auto; /* 设置左右外边距为 auto */
     }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    th, td {
+        border: 1px solid black;
+        padding: 5px;
+        text-align: center;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+    .note {
+        font-size: smaller;
+        text-align: left;
+    }
   </style>
 
   <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -74,7 +90,7 @@
               <a href="https://xianghang.me/zh/">Xianghang Mi</a><sup>1</sup>,
             </span>
             <span class="author-block">
-              XiaoFeng Wang<sup>2</sup>,
+              Xiaofeng Wang<sup>2</sup>,
             </span>
           </div>
 
@@ -253,6 +269,73 @@
   </div>
 </section>
 <!-- Finding. -->
+
+<!-- Dectection. -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column">
+        <h2 class="title is-3">RESIP Traffic Classifications</h2>
+        <div class="content has-text-justified">
+          <div class="content">
+          </div>
+            <p>  
+              To defend against the non-negligible security risks of RESIP traffic, one promising option is to deploy a RESIP traffic detector at various vantage points, e.g., a local device, the network gateway of an organization, or a router operated by an ISP.  Therefore,  we further pursue this task through the combination of machine learning, a set of robust features inherent in each traffic flow, and a large-scale ground truth dataset consisting of real-world relayed flows, tunnel flows, and non-RESIP traffic. 
+            </p>
+            <p>
+              We explore two machine learning paradigms. One is to fine-tune a pre-trained transformer-based model which allows us to automatically encode a traffic flow into a generic representation. The other is to manually design features and utilize classic classification algorithms to build up the classification models. The following table shows the performance of our model.
+            </p>
+            <table>
+              <caption>The performance of various classification models for RESIP flows detection.</caption>
+              <thead>
+                  <tr>
+                      <th>Model</th>
+                      <th>Precision</th>
+                      <th>Recall</th>
+                      <th>F1-Score</th>
+                      <th>FPR<sup>1</sup></th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr>
+                      <td>TF-BERT<sup>2</sup></td>
+                      <td>0.9036</td>
+                      <td>0.8891</td>
+                      <td>0.8963</td>
+                      <td>0.0535</td>
+                  </tr>
+                  <tr>
+                    <td>RF-BERT<sup>2</sup></td>
+                    <td>0.9287</td>
+                    <td>0.9304</td>
+                    <td>0.9296</td>
+                    <td>0.0396</td>
+                  </tr>
+                  <tr>
+                    <td>TF-RF<sup>2</sup></td>
+                    <td>0.9571</td>
+                    <td>0.9139</td>
+                    <td>0.9350</td>
+                    <td>0.0223</td>
+                  </tr>
+                  <tr>
+                    <td>RF-RF<sup>2</sup></td>
+                    <td>0.9620</td>
+                    <td>0.8880</td>
+                    <td>0.9235</td>
+                    <td>0.0191</td>
+                  </tr>
+              </tbody>
+          </table>
+          <p class="note"><sup>1</sup>FPR stands for the false positive rate.</p>
+          <p class="note"><sup>2</sup>TF-BERT is downstream task that fine-tunes the ET-BERT model for tunnel flow classification. RF-BERT is downstream task that fine-tunes the ET-BERT model for relayed flow classification. TF-RF denotes Random Forest classifiers specialized in tunnel flow classification, while RF-RF denotes Random Forest classifiers designed for relayed flow classification.</p>
+      
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Dectection. -->
 
 <section class="section" id="BibTeX">
   <div class="container is-max-desktop content">

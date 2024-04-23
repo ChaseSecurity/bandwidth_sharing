@@ -1,13 +1,13 @@
 # Code Details
 
-`domain_len.py`: Used to analyze the domain name of the specified pcap file and return the traffic size corresponding to each domain name.
-   + You can use `python3 domain_len.py /path/to/pcap/file/` for test. It will generate a json file to store the results.
+`http_content.py`: This Python script is designed to extract the payload of the http protocole.
+   + You can use `python3 http_content.py /path/to/pcap/file/` for test. It will generate a json file to store the results.
 
 
 # Usage
 
 ```bash
-python3 domain_len.py /path/to/pcap/file/
+python3 http_content.py /path/to/pcap/file/
 ```
 
 

@@ -16,32 +16,22 @@ with open('./stat.json', 'r') as file:
     dict_x = input_stat['dict_x']
     dict_y = input_stat['dict_y']
 
-with open('./stat2.json', 'r') as file:
-    input_stat = json.load(file)
-    total_ips_16 = input_stat['ips_16']
-    total_ips_24 = input_stat['ips_24']
-    total = input_stat['total']
-    total_dict_ = input_stat['dict_']
 
 # Calculate probe counts and IP counts
 for count in dict_x.values():
     packetstream_probe_count += count
 for count in dict_y.values():
     iproyal_probe_count += count
-total_probe_count = packetstream_probe_count + iproyal_probe_count
 
 packetstream_ip_count = len(dict_x)
 iproyal_ip_count = len(dict_y)
-total_ip_count = len(total_dict_)
 
 # Print statistics
 print('Scale:')
 print('packetstream_ip_count:', packetstream_ip_count)
 print('iproyal_ip_count:', iproyal_ip_count)
-print('total_ip_count:', total_ip_count)
 print('packetstream_probe_count:', packetstream_probe_count)
 print('iproyal_probe_count:', iproyal_probe_count)
-print('total_probe_count:', total_probe_count, total)
 print()
 
 # Relay statistics, IPs anonymized
@@ -75,12 +65,9 @@ for key in dict_x:
 for key in dict_y:
     if key in dataset_ip_num:
         iproyal_hit_count += 1
-for key in total_dict_:
-    if key in dataset_ip_num:
-        total_hit_count += 1
+
 
 print('A comparison with previous residential proxy datasets:')
 print('dataset_ip_number:', len(dataset_ip_num))
 print('packetstream_hit_count:', packetstream_hit_count, 'rate1:', packetstream_hit_count / len(dataset_ip_num), 'rate2:', packetstream_hit_count / len(dict_x))
 print('iproyal_hit_count:', iproyal_hit_count, 'rate1:', iproyal_hit_count / len(dataset_ip_num), 'rate2:', iproyal_hit_count / len(dict_y))
-print('total_hit_count:', total_hit_count, 'rate1:', total_hit_count / len(dataset_ip_num), 'rate2:', total_hit_count / len(total_dict_))

@@ -28,7 +28,7 @@ def unpacker(type_string, packet):
         data = data
     return data, packet[length:]
 
-def get_domain_len(filename):
+def get_malicious_ip_timestamps(filename):
     src_ips=['172.19.0.2','172.19.0.3','172.19.0.4']
     
     server_ips = {
@@ -211,60 +211,21 @@ def get_domain_len(filename):
     json.dump(output_stat, output_json)
     output_json.close()
 
-def space(port_list):
-    port_list=port_list[1:]
-    #read old data
-    try:
-        input_json=open('stat.json','r')
-        input_stat=json.load(input_json)
-        port_filename_stream_ip_host_length_contents=input_stat['port_filename_stream_ip_host_length_contents']
-        files_path=input_stat['files_path']
-        input_json.close()
-    except:
-        print("没有json文件")
-    
-    all_domain=open('all_domain.txt','w')
-    contents_file=open('contens.txt','w')
-    for port,filename_stream_ip_host_length_contents in port_filename_stream_ip_host_length_contents.items():
-        # '143','110','993','995','109'
-        # print(port)
-        if port not in  port_list:
-            # print('no')
-            continue
-        for filename,stream_ip_host_length_contents in filename_stream_ip_host_length_contents.items():
-            for stream,ip_host_length_contents in stream_ip_host_length_contents.items():
-                if ip_host_length_contents[1]!='':
-                    all_domain.write(ip_host_length_contents[1]+"\n")
-                
-                # contents_file.write(str(ip_host_length_contents[3])+"\n"*3)
-                contents=""
-                for content in ip_host_length_contents[3]:
-                    content=content.replace('\\r\\n','\n')
-                    contents+=content
-                    # contents_file.write(content)
-
-                
-                if contents.strip()!='':
-                    contents_file.write(filename+"\n")
-                    contents_file.write(stream+","+str(ip_host_length_contents[0])+"\n")
-                    contents_file.write(contents)
-                    contents_file.write('\n'*3)
 
                 
 def main(): 
     if len(sys.argv)==2:
         print('正在处理文件:',sys.argv[1])
-        get_domain_len(sys.argv[1])
+        get_malicious_ip_timestamps(sys.argv[1])
         print('处理文件完成:',sys.argv[1])
     elif len(sys.argv)==3:
         if sys.argv[1].find(sys.argv[2])!=-1:
             print('正在处理文件:',sys.argv[1])
-            get_domain_len(sys.argv[1])
+            get_malicious_ip_timestamps(sys.argv[1])
             print('处理文件完成:',sys.argv[1])
         else:
             print('文件:',sys.argv[1]," 未包含字符串:",sys.argv[2])
-    elif len(sys.argv)==1:
-        space()
+
 
 if __name__ == "__main__":
     main()

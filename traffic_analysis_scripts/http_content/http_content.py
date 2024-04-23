@@ -25,7 +25,7 @@ def unpacker(type_string, packet):
         data = data
     return data, packet[length:]
 
-def url_find(file_name):
+def http_content(file_name):
     filename=os.path.basename(file_name)
 
     src_ips=['172.19.0.2','172.19.0.3','172.19.0.4']
@@ -295,12 +295,12 @@ def space():
 def main():
     if len(sys.argv)==2:
             print('正在处理文件:',sys.argv[1])
-            url_find(sys.argv[1])
+            http_content(sys.argv[1])
             print('处理文件完成:',sys.argv[1])
     elif len(sys.argv)>=2:
         if sys.argv[1].find(sys.argv[2])!=-1:
             print('正在处理文件:',sys.argv[1])
-            url_find(sys.argv[1])
+            http_content(sys.argv[1])
             print('处理文件完成:',sys.argv[1])
         else:
             print('文件:',sys.argv[1]," 未包含字符串:",sys.argv[2])

@@ -1,13 +1,14 @@
 # Code Details
 
-`domain_len.py`: Used to analyze the domain name of the specified pcap file and return the traffic size corresponding to each domain name.
-   + You can use `python3 domain_len.py /path/to/pcap/file/` for test. It will generate a json file to store the results.
+`urlhaus_api.py`: This Python script is designed to use the ip set, domain set, and url set obtained by (../ip_domain_url/) to make requests using the urlhaus api.
+   + You can use `python urlhaus_api.py /path/to/new/domains.txt /path/to/passive/domains.txt /path/to/output/results.txt` for test. It will generate a json file to store the results.
 
 
 # Usage
 
 ```bash
-python3 domain_len.py /path/to/pcap/file/
+python urlhaus_api.py /path/to/new/domains.txt /path/to/passive/domains.txt /path/to/output/results.json
+
 ```
 
 

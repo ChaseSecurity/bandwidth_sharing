@@ -1,13 +1,13 @@
 # Code Details
 
-`domain_len.py`: Used to analyze the domain name of the specified pcap file and return the traffic size corresponding to each domain name.
-   + You can use `python3 domain_len.py /path/to/pcap/file/` for test. It will generate a json file to store the results.
+`threats_stat.py`: This Python script is designed to analyze the differences in results from different threat intelligence.
+   + You can use `python3 threats_stat.py /path/to/pcap/file/` for test. It will generate a json file to store the results.
 
 
 # Usage
 
 ```bash
-python3 domain_len.py /path/to/pcap/file/
+python3 threats_stat.py /path/to/pcap/file/
 ```
 
 

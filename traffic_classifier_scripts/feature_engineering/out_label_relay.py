@@ -979,8 +979,3 @@ def main():
 if __name__ == "__main__":
     main()
 
-
-# iproyal_aspServer_2022-07-
-# iproyal_aspServer_2022-08-
-# honeygain_aspServer_2022-
-# packetstream_aspServer_2022-07-1

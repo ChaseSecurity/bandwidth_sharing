@@ -4,7 +4,7 @@
    + You can use `python3 get_mail.py /path/to/pcap/file/` for test. It will generate a json file to store the results.
 
 `find_template_packetstream.py`: This Python script is designed to count the number of emails for each template in packetstream emails, and be able to calculate the number of successfully sent.
-   + You can use `python3 find_template_packetstream.py` for test.
+   + You can use `python3 find_template_packetstream.py` for test.It will output the result to the console.
 
 `get_scale_of_email_delivery_traffic.py`: This Python script is designed to calculate the number and proportion of emails received by each different recipient's mailbox, and output the number of emails successfully sent and the number of errors at different stages.
    + You can use `python3 get_scale_of_email_delivery_traffic.py` for test. It will generate a json file to store the results.
@@ -21,6 +21,11 @@
 
 ```bash
 python3 get_mail.py /path/to/pcap/file/
+python3 find_template_packetstream.py
+python3 get_scale_of_email_delivery_traffic.py
+python3 get_server_ip.py
+python3 get_suffix.py
+python3 get_server_ip.py
 ```
 
 

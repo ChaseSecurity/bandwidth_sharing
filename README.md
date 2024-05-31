@@ -15,7 +15,7 @@ As the results, we have collected and will release the largest-ever and realisti
 
 ## Datasets Release
 
-To avoid misuse by miscreants, the dataset will be provided upon request and background checking. Please contact corresponding author and apply for the dataset.
+To avoid misuse by miscreants, the dataset will be provided upon request and background checking. To apply for the access, please contact the corresponding author [Xianghang Mi](mailto:xianghangmi@gmail.com). You can also directly fill [this Google form](https://forms.gle/EvjjXMGrVTub2V1G7), and we will contact you asap.
 
 ## Code Release
 

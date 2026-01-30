@@ -1,0 +1,23 @@
+# External imports (module -> package)
+Crypto -> pycryptodome (or pycrypto)
+defined_classes -> UNRESOLVED (possible local file: defined-classes.py)
+dpkt -> dpkt
+ipwhois -> ipwhois
+joblib -> joblib
+numpy -> numpy
+pandas -> pandas
+pika -> pika
+pymysql -> PyMySQL
+pyshark -> pyshark
+requests -> requests
+sklearn -> scikit-learn
+tldextract -> tldextract
+tqdm -> tqdm
+yaml -> PyYAML
+
+# Local top-level modules (not external deps)
+cryptoUtil
+dbUtil
+fp_probe
+infiltration_util
+mqUtil

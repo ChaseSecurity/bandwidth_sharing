@@ -1,7 +1,8 @@
 # Code Details
 
 `split_pcap.py`: This script is used to split a complete pcap file into multiple small pcap files in the form of flows.Please place SplitCap.exe([Download](https://www.netresec.com/?page=SplitCap)) in the folder in advance. 
-   + You can use `python3 split_pcap.py` for test.
+   + You can use `python split_pcap.py --input_dir=./input_dir/ --output_dir=./output_dir/` for test after creating ./input_dir/ and ./output_dir/.
+   + Be sure to have mono installed (e.g., brew install mono)
 
 `out_label_relay.py`: This script is used to classify packetstream, iproyal, honeygain relayed flows and other flows, and save the results to a json file.
    + You can use `python3 out_label_relay.py /path/to/pcap/file` for test.

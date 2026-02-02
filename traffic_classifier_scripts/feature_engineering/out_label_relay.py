@@ -6,7 +6,7 @@ import struct
 import os
 
 out_packet_dir='./packet/'
-out_flow_dir='./flow/'
+out_flow_dir='./flows/relay/'
 
 def unpacker(type_string, packet):
     """

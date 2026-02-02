@@ -6,6 +6,7 @@ import sys
 
 source_pcap_dir=''
 output_split_dir=''
+stat_filename='stat.json'
 # label 0,1
 
 def split_pcap(filename, files_path_set, files_path_list, include_udp=False):
@@ -82,7 +83,7 @@ def split_pcap(filename, files_path_set, files_path_list, include_udp=False):
 
 def load_stat_files():
     try:
-        with open('stat.json', 'r') as input_json:
+        with open(stat_filename, 'r') as input_json:
             input_stat = json.load(input_json)
         files_path_list = input_stat.get('files_path', [])
         return set(files_path_list), files_path_list
@@ -95,7 +96,7 @@ def write_stat_files(files_path_list):
     # output_stat['all_len']=all_len
     # output_stat['all_base_tcp_len']=all_base_tcp_len
     output_stat['files_path'] = files_path_list
-    with open('stat.json', 'w') as output_json:
+    with open(stat_filename, 'w') as output_json:
         json.dump(output_stat, output_json)
 
 
@@ -107,15 +108,29 @@ def main():
                         help="Directory containing per-pcap folders to copy from.")
     parser.add_argument("--output_split_dir", required=True,
                         help="Output directory where class subfolders (0/1) will be created.")
+    parser.add_argument("--flow_type", choices=["relay", "tunnel"],
+                        help="Select label type to fork outputs (relay or tunnel).")
     parser.add_argument("--include_udp", action="store_true",
                         help="Also copy UDP flows (default: TCP only).")
     parser.add_argument("--progress_every", type=int, default=1000,
                         help="Print progress every N files (default: 1000).")
     args = parser.parse_args()
 
-    global source_pcap_dir, output_split_dir
+    global source_pcap_dir, output_split_dir, stat_filename
     source_pcap_dir = os.path.expanduser(args.source_pcap_dir)
     output_split_dir = os.path.expanduser(args.output_split_dir)
+
+    flow_type = args.flow_type
+    if flow_type is None:
+        if "flows/relay" in args.input_json:
+            flow_type = "relay"
+        elif "flows/tunnel" in args.input_json:
+            flow_type = "tunnel"
+    if flow_type:
+        output_split_dir = os.path.join(output_split_dir, flow_type)
+        stat_filename = f"stat_{flow_type}.json"
+        if args.input_json in {"./flows", "flows"}:
+            args.input_json = os.path.join(args.input_json, flow_type)
 
     if not os.path.isdir(source_pcap_dir):
         raise FileNotFoundError(f"source_pcap_dir not found: {source_pcap_dir}")

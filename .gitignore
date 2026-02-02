@@ -1,9 +1,12 @@
 traffic_classifier_scripts/feature_engineering/flow/
+traffic_classifier_scripts/feature_engineering/flows/
 traffic_classifier_scripts/feature_engineering/input_dir/
 traffic_classifier_scripts/feature_engineering/output_dir/
 traffic_classifier_scripts/feature_engineering/split_output/
 traffic_classifier_scripts/feature_engineering/dataset/
-traffic_classifier_scripts/feature_engineering/model
+traffic_classifier_scripts/feature_engineering/model/
+traffic_classifier_scripts/feature_engineering/stat_relay.json
+traffic_classifier_scripts/feature_engineering/stat_tunnel.json
 *.exe
 *.pcap
 *.json

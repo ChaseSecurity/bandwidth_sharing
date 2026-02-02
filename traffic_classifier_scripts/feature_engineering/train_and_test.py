@@ -669,7 +669,7 @@ def train_and_evaluate(dataset_path, model_path):
 
     # Filter data
     filter_providers = ['packetstream', 'iproyal', 'honeygain', 'others_dataset']
-    max_samples_per_label = 20000
+    max_samples_per_label = 2_000_000
     filtered_X, filtered_y, filtered_providers = filter_data(X, y, providers, filter_providers, max_samples_per_label)
 
     # Split the data into training and test sets (80:20)
@@ -1058,10 +1058,15 @@ def main():
                         help="Directory to write dataset.json (default: ./dataset).")
     parser.add_argument("--model_dir", default="./model",
                         help="Directory to write model files (default: ./model).")
+    parser.add_argument("--flow_type", choices=["relay", "tunnel"],
+                        help="Select label type to fork outputs (relay or tunnel).")
     args = parser.parse_args()
 
     dataset_dir = os.path.expanduser(args.dataset_dir)
     model_dir = os.path.expanduser(args.model_dir)
+    if args.flow_type:
+        dataset_dir = os.path.join(dataset_dir, args.flow_type)
+        model_dir = os.path.join(model_dir, args.flow_type)
     os.makedirs(dataset_dir, exist_ok=True)
     os.makedirs(model_dir, exist_ok=True)
 

@@ -1,6 +1,5 @@
 # External imports (module -> package)
 Crypto -> pycryptodome (or pycrypto)
-defined_classes -> UNRESOLVED (possible local file: defined-classes.py)
 dpkt -> dpkt
 ipwhois -> ipwhois
 joblib -> joblib
@@ -18,6 +17,7 @@ yaml -> PyYAML
 # Local top-level modules (not external deps)
 cryptoUtil
 dbUtil
+defined_classes
 fp_probe
 infiltration_util
 mqUtil

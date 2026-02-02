@@ -1,0 +1,14 @@
+dpkt
+ipwhois
+joblib
+numpy
+pandas
+pika
+pycryptodome
+PyMySQL
+pyshark
+requests
+scikit-learn
+tldextract
+tqdm
+PyYAML

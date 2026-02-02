@@ -1,3 +1,4 @@
+import argparse
 import sys
 import json
 from sklearn.ensemble import RandomForestClassifier
@@ -14,7 +15,7 @@ import socket
 import time
 import random
 
-pcap_path="/path/to/pcap/"  # 分割0 1 的地方
+pcap_path="/path/to/pcap/"  # split 0/1 data location
 dataset_path='/path/to/dataset/'
 model_path='/path/to/model/'
 
@@ -50,6 +51,10 @@ def generation(pcap_path,dataset_path):
     provider_number[1]['others_dataset']=0
 
 
+    pcap_path = os.path.expanduser(pcap_path)
+    if not pcap_path.endswith(os.sep):
+        pcap_path = pcap_path + os.sep
+
     for parent, dirs, files in os.walk(pcap_path):
         if label_name_list == []:
             label_name_list.extend(dirs)
@@ -57,7 +62,7 @@ def generation(pcap_path,dataset_path):
         # print('label_name_list:',label_name_list)
         for dir in label_name_list:
             for p,dd,ff in os.walk(parent + "/" + dir):
-                session_pcap_path[dir] = pcap_path + dir
+                session_pcap_path[dir] = os.path.join(pcap_path, dir)
         break
     print('session_pcap_path:',session_pcap_path)
     for key in tqdm.tqdm(session_pcap_path.keys()):
@@ -65,10 +70,10 @@ def generation(pcap_path,dataset_path):
         r_files = target_all_files
         for r_f in r_files:
 
-            print('正在处理:',r_f)
+            print('Processing:',r_f)
             feature_data = get_feature_flow(r_f)
             if feature_data==-1:
-                print('处理完成:',r_f)
+                print('Finished:',r_f)
                 continue
         
 
@@ -83,7 +88,7 @@ def generation(pcap_path,dataset_path):
             providers.append(provider if found else 'others_dataset')  
             X.append(feature_data)
             Y.append(int(key))
-            print('处理完成:',r_f)
+            print('Finished:',r_f)
         dataset['providers'] = providers  
     print('other dataset:')
     for provider,number in provider_number[0].items():   
@@ -92,12 +97,16 @@ def generation(pcap_path,dataset_path):
     print('relayed dataset:')
     for provider,number in provider_number[1].items():
         print(provider+": ",number)
-    print('dataset: ',dataset_path+'dataset.json')
+    print('dataset: ', os.path.join(dataset_path, 'dataset.json'))
+    if len(X) == 0:
+        print("No samples found. Check that pcap files exist under "
+              f"{pcap_path}0/ and {pcap_path}1/ and that filenames contain provider keywords.")
 
     dataset['X']=X
     dataset['Y']=Y
     dataset['provider_number']=provider_number
-    dataset_file=open(dataset_path+'dataset.json','w')
+    os.makedirs(dataset_path, exist_ok=True)
+    dataset_file=open(os.path.join(dataset_path,'dataset.json'),'w')
     json.dump(dataset,dataset_file,ensure_ascii=False, cls=JsonEncoder)
 
 
@@ -138,7 +147,7 @@ def get_feature_flow(filename):
         seq0=0
         ack0=0
 
-        packet_num=0    #当前pcap数据包 number
+        packet_num=0    # current pcap packet number
         upload_num=0
         download_num=0
 
@@ -167,8 +176,8 @@ def get_feature_flow(filename):
         max_need_num=max(need_num)
         find_src_ip=False
 
-        total_upstream = 0  # 初始化变量
-        total_downstream = 0  # 初始化变量
+        total_upstream = 0  # initialize variables
+        total_downstream = 0  # initialize variables
 
         for ts,buf in pcap:
 
@@ -212,22 +221,22 @@ def get_feature_flow(filename):
             if upload_num>max_need_num and download_num>max_need_num:
                 break
             #ip.src  ip.dst
-            if ip.p == 17:  # UDP协议
+            if ip.p == 17:  # UDP protocol
                 protocol = 'udp'
                 udp = ip.data
 
-                # 计算UDP数据包的有效载荷长度
-                udp_payload_length = udp.ulen - 8  # UDP头部固定长度为8字节
+                # compute UDP payload length
+                udp_payload_length = udp.ulen - 8  # UDP header is 8 bytes
 
                 if sip == src_ip:
-                    # 如果是上行数据包，更新上行总数据量
+                    # if upstream packet, update total upstream bytes
                     total_upstream += udp_payload_length
                 else:
-                    # 如果是下行数据包，更新下行总数据量
+                    # if downstream packet, update total downstream bytes
                     total_downstream += udp_payload_length
 
                 if upload_num in need_num:
-                    # 计算上行比率
+                    # compute upstream ratio
                     if total_upstream + total_downstream > 0:
                         upstream_ratio = total_upstream / (total_upstream + total_downstream)
                         data_output['upstreamRatio'].append(upstream_ratio)
@@ -238,13 +247,13 @@ def get_feature_flow(filename):
                 tcp= ip.data
                 if packet_num==1:
                     if tcp.flags==2:
-                        seq0=tcp.seq  #本方发送syn，本方的seq是本方的seq
+                        seq0=tcp.seq  # local sends SYN; local seq is local seq
                     else:
                         print("**error** : the first packet is not syn")
                         return -1
                 elif packet_num==2:
                     if tcp.flags==18:
-                        ack0=tcp.seq  #对方的seq是本方的ack
+                        ack0=tcp.seq  # peer seq becomes local ack
                     else:
                         print("**error** : the second packet is not syn_ack")
                         return -1
@@ -256,7 +265,7 @@ def get_feature_flow(filename):
                     upstreamRatio=delta_seq/(delta_seq+delta_ack)
                     data_output['upstreamRatio'].append(upstreamRatio)
 
-        # 取delta
+        # compute deltas
         for i in range(1,len(upload_packets_ts)):
             upload_packets_delta_ts.append(upload_packets_ts[i]-upload_packets_ts[i-1])
 
@@ -266,7 +275,7 @@ def get_feature_flow(filename):
         for i in range(1,len(inter_packets_ts)):
             inter_packets_delta_ts.append(inter_packets_ts[i]-inter_packets_ts[i-1])
 
-        ##每个下标代表前i个包的字节数总和
+        ## each index represents the total bytes of the first i packets
         for i in range(1,len(upload_packets_bytes)):
             upload_packets_total_bytes.append(sum(upload_packets_bytes[0:i]))  
         for i in range(1,len(download_packets_ts)):
@@ -348,7 +357,7 @@ def get_feature_flow(filename):
             print("**error** : data don't enough ! ---2")
             return -1
 
-        # 若不满足个数，用最后一个数据补全   得改
+        # if not enough samples, pad with the last value (needs review)
         if len(data_output['upstreamRatio'])<need_length:
             last_data=data_output['upstreamRatio'][len(data_output['upstreamRatio'])-1]
             for i in range(need_length-len(data_output['upstreamRatio'])):
@@ -489,13 +498,13 @@ def training(dataset_path, model_path):
     
     # Filter training data for training
     filter_providers = ['packetstream', 'iproyal', 'honeygain','others_dataset']
-    # 定义要过滤的提供者和每个提供者的最大数据量
+    # define providers to filter and max data per provider
     max_samples_per_label = 2000
 
-    # 过滤数据
+    # filter data
     filtered_X = []
     filtered_y = []
-    filtered_providers = []  # 更新providers列表
+    filtered_providers = []  # update providers list
     provider_label_counts = {provider: {0: 0, 1: 0} for provider in filter_providers}
     for feature, label, provider in zip(X, y, providers):
         if provider in ['packetstream', 'iproyal', 'honeygain']:
@@ -585,13 +594,13 @@ def calculate_dataset_sizes(dataset_path, filter_providers):
     original_size = len(X)
     # Filter training data for training
     filter_providers = ['packetstream', 'iproyal', 'honeygain', 'others_dataset']
-    # 定义要过滤的提供者和每个提供者的最大数据量
+    # define providers to filter and max data per provider
     max_samples_per_label = 2000
 
-    # 过滤数据
+    # filter data
     filtered_X = []
     filtered_y = []
-    filtered_providers = []  # 更新providers列表
+    filtered_providers = []  # update providers list
     provider_label_counts = {provider: {0: 0, 1: 0} for provider in filter_providers}
     for feature, label, provider in zip(X, y, providers):
         if provider in ['packetstream', 'iproyal', 'honeygain']:
@@ -650,11 +659,13 @@ def calculate_dataset_sizes(dataset_path, filter_providers):
 # Overall performance: Train{A, B, C, Others} -> Test{A, B, C, Others} + Test{A}  + Test{B} + Test{C} + Test{Others} 
 def train_and_evaluate(dataset_path, model_path):
     # Load the dataset
-    with open(dataset_path + "dataset.json", 'r') as dataset_file:
+    with open(os.path.join(dataset_path, "dataset.json"), 'r') as dataset_file:
         dataset = json.load(dataset_file)
     X = dataset['X']
     y = dataset['Y']
     providers = dataset['providers']
+    if len(X) == 0:
+        raise ValueError("Dataset is empty. Ensure split_output/0 and split_output/1 contain pcap files.")
 
     # Filter data
     filter_providers = ['packetstream', 'iproyal', 'honeygain', 'others_dataset']
@@ -667,7 +678,7 @@ def train_and_evaluate(dataset_path, model_path):
     # Train the model on the training data
     clf = RandomForestClassifier(n_estimators=10)
     clf.fit(X_train, y_train)
-    joblib.dump(clf, model_path + 'model.pkl')
+    joblib.dump(clf, os.path.join(model_path, 'model.pkl'))
 
     # Evaluate the model on the test data
     y_pred = clf.predict(X_test)
@@ -694,28 +705,28 @@ def separate_data_by_providers(X, y, providers, train_providers, test_providers)
             train_X.append(x)
             train_y.append(label)
             train_providers_list.append(provider)
-        if provider in test_providers:  # 使用 if 而不是 elif
+        if provider in test_providers:  # use if instead of elif
             test_X.append(x)
             test_y.append(label)
             test_providers_list.append(provider)
 
     return train_X, train_y, train_providers_list, test_X, test_y, test_providers_list
 
-# 通用性实验 Train{A， Others} -> Test{A, B, C, Others} + Test{B} + Test{C} + Test{Others} 以及 Train{A/B， Others} -> Test{A, B, C, Others} + Test{C} + Test{Others} 
+# generalization experiment: Train{A, Others} -> Test{A,B,C,Others}+Test{B}+Test{C}+Test{Others} and Train{A/B, Others} -> Test{A,B,C,Others}+Test{C}+Test{Others}
 def train_and_evaluate2(dataset_path, model_path, train_providers):
-    # 定义所有的提供商
+    # define all providers
     all_providers = ['packetstream', 'iproyal', 'honeygain', 'others_dataset']
-    # 定义测试提供商
+    # define test providers
     test_providers = [provider for provider in all_providers if provider not in train_providers] + ['others_dataset']
 
-    # 加载数据集
+    # load dataset
     with open(dataset_path + "dataset.json", 'r') as dataset_file:
         dataset = json.load(dataset_file)
     X = dataset['X']
     y = dataset['Y']
     providers = dataset['providers']
 
-    # 过滤数据
+    # filter data
     max_samples_per_label = 2000
     filtered_X, filtered_y, filtered_providers = filter_data(X, y, providers, train_providers + test_providers, max_samples_per_label)
 
@@ -723,25 +734,25 @@ def train_and_evaluate2(dataset_path, model_path, train_providers):
 
 
 
-    # 根据 train_providers 和 test_providers 列表区分数据集
+    # split dataset using train_providers and test_providers
     train_X, train_y, train_providers_list, test_X, test_y, test_providers_list = separate_data_by_providers(filtered_X, filtered_y, filtered_providers, train_providers, test_providers)
 
     train_X, _,train_y, _,train_providers_list,_ = train_test_split(train_X, train_y, train_providers_list, test_size=0.2, random_state=42)
 
     _, test_X, _, test_y, _, test_providers_list = train_test_split(test_X, test_y, test_providers_list, test_size=0.2, random_state=42)
 
-    # 训练模型
+    # train model
     clf = RandomForestClassifier(n_estimators=10)
     clf.fit(train_X, train_y)
     joblib.dump(clf, model_path + 'model.pkl')
 
-    # 评估模型在整个测试集上的性能
+    # evaluate model on full test set
     y_pred = clf.predict(real_test_X)
     print("Overall Test Metrics:")
     print(classification_report(real_test_y, y_pred, digits=4))
 
-    # 分别评估模型在每个测试提供商上的性能
-    # 分别评估模型在每个测试提供商上的性能
+    # evaluate model for each test provider
+    # evaluate model for each test provider
     for provider in test_providers:
         print(f"Metrics for Provider: {provider}")
         provider_data = [(x, label) for x, label, prov in zip(test_X, test_y, test_providers_list) if prov == provider]
@@ -753,7 +764,7 @@ def train_and_evaluate2(dataset_path, model_path, train_providers):
             print(f"No test samples available for provider: {provider}")
 
 
-    # 输出数据集大小
+    # output dataset sizes
     output_dataset_sizes(len(X), len(filtered_X), len(train_X), len(test_X), train_providers_list, train_y, test_providers_list, test_y, {prov: test_providers_list.count(prov) for prov in set(test_providers_list)})
 
 
@@ -928,25 +939,25 @@ def get_pcap_files(folder_path, sample_size=10000):
     pcap_files = []
     labels = []
 
-    # 定义一个递归函数来遍历所有子文件夹
+    # define a recursive function to traverse subfolders
     def traverse_folders(current_path, current_label):
         for entry in os.listdir(current_path):
             full_path = os.path.join(current_path, entry)
             if os.path.isdir(full_path):
-                # 如果当前路径是一个文件夹，则递归遍历
+                # if current path is a directory, recurse
                 traverse_folders(full_path, current_label)
             elif entry.endswith('.pcap'):
-                # 如果是 pcap 文件，则添加到列表中
+                # if it is a pcap file, add to list
                 pcap_files.append(full_path)
                 labels.append(current_label)
 
-    # 遍历 "0" 和 "1" 文件夹
+    # traverse "0" and "1" folders
     for label in ['0', '1']:
         label_path = os.path.join(folder_path, label)
         if os.path.exists(label_path) and os.path.isdir(label_path):
             traverse_folders(label_path, int(label))
 
-    # 随机采样 pcap 文件
+    # randomly sample pcap files
     if len(pcap_files) > sample_size:
         sample_indices = random.sample(range(len(pcap_files)), sample_size)
         pcap_files = [pcap_files[i] for i in sample_indices]
@@ -956,13 +967,13 @@ def get_pcap_files(folder_path, sample_size=10000):
 
 
 def predict_folder(folder_path, model_path = "./relayed_.pkl"):
-    # 加载模型
+    # load model
     model = joblib.load(model_path)
 
-    # 获取 pcap 文件和标签
+    # get pcap files and labels
     pcap_files, labels = get_pcap_files(folder_path)
 
-    # 提取特征并进行预测
+    # extract features and run prediction
     valid_features = []
     valid_labels = []
     start_time = time.time()
@@ -976,10 +987,10 @@ def predict_folder(folder_path, model_path = "./relayed_.pkl"):
     end_time = time.time()
     time_taken = end_time - start_time
 
-    # 计算准确率
+    # compute accuracy
     accuracy = accuracy_score(valid_labels, total_predictions)
 
-    # 打印结果
+    # print results
     print(f"Total files processed: {len(total_predictions)}")
     print(f"Time taken: {time_taken} seconds")
     print(f"Accuracy: {accuracy}")
@@ -987,17 +998,17 @@ def predict_folder(folder_path, model_path = "./relayed_.pkl"):
     return total_predictions, time_taken, accuracy
 
 def print_provider_counts(dataset_path):
-    with open(dataset_path + "dataset.json", 'r') as dataset_file:
+    with open(os.path.join(dataset_path, "dataset.json"), 'r') as dataset_file:
         dataset = json.load(dataset_file)
         providers = dataset['providers']
         labels = dataset['Y']
 
-    # 初始化计数器
+    # initialize counters
     provider_counts = {}
     for provider in set(providers):
         provider_counts[provider] = {'total': 0, 'label_0': 0, 'label_1': 0}
 
-    # 计数
+    # count
     for provider, label in zip(providers, labels):
         provider_counts[provider]['total'] += 1
         if label == 0:
@@ -1005,18 +1016,18 @@ def print_provider_counts(dataset_path):
         elif label == 1:
             provider_counts[provider]['label_1'] += 1
 
-    # 打印结果
+    # print results
     for provider, counts in provider_counts.items():
         print(f"Provider: {provider}, Total: {counts['total']}, Label 0: {counts['label_0']}, Label 1: {counts['label_1']}")
 
 def predict_folder(folder_path, model_path = "./model.pkl"):
-    # 加载模型
+    # load model
     model = joblib.load(model_path)
 
-    # 获取 pcap 文件和标签
+    # get pcap files and labels
     pcap_files, labels = get_pcap_files(folder_path)
 
-    # 提取特征并进行预测
+    # extract features and run prediction
     valid_features = []
     valid_labels = []
     start_time = time.time()
@@ -1030,10 +1041,10 @@ def predict_folder(folder_path, model_path = "./model.pkl"):
     end_time = time.time()
     time_taken = end_time - start_time
 
-    # 计算准确率
+    # compute accuracy
     accuracy = accuracy_score(valid_labels, total_predictions)
 
-    # 打印结果
+    # print results
     print(f"Total files processed: {len(total_predictions)}")
     print(f"Time taken: {time_taken} seconds")
     print(f"Accuracy: {accuracy}")
@@ -1041,8 +1052,21 @@ def predict_folder(folder_path, model_path = "./model.pkl"):
     return total_predictions, time_taken, accuracy
 
 def main():
-    generation(sys.argv[1],dataset_path)
-    train_and_evaluate(dataset_path,model_path)
+    parser = argparse.ArgumentParser(description="Train and evaluate the classifier.")
+    parser.add_argument("pcap_dir", help="Directory containing split 0/1 subfolders.")
+    parser.add_argument("--dataset_dir", default="./dataset",
+                        help="Directory to write dataset.json (default: ./dataset).")
+    parser.add_argument("--model_dir", default="./model",
+                        help="Directory to write model files (default: ./model).")
+    args = parser.parse_args()
+
+    dataset_dir = os.path.expanduser(args.dataset_dir)
+    model_dir = os.path.expanduser(args.model_dir)
+    os.makedirs(dataset_dir, exist_ok=True)
+    os.makedirs(model_dir, exist_ok=True)
+
+    generation(args.pcap_dir, dataset_dir)
+    train_and_evaluate(dataset_dir, model_dir)
 
 
 

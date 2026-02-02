@@ -37,7 +37,7 @@ def out_label_packetstream_tunnel(filename):
 
     number_information={}
 
-    # 处理DNS所需要的变量
+    # Variables needed for DNS processing
     ip_domains_number={}
     ip_domains={}
     domain_ips={}
@@ -46,17 +46,17 @@ def out_label_packetstream_tunnel(filename):
 
     stream_http_data={}
 
-    #当前stream号码
+    # current stream number
     stream_num=0
-    #定义以172.19.0.2放在开头 '172.19.0.2_36450_172.67.74.242_443'--->[]
+    # define stream index starting with 172.19.0.2: '172.19.0.2_36450_172.67.74.242_443' -> []
     ips_ports__stream_startN_startT_endN_endT={}
-    # 定义一个流的方法: src ip port,dst ip port, timestamp:后面的包跟第一个相差时间不超过半小时则视为同一条流。1800s
+    # Stream definition: src ip/port, dst ip/port, timestamp. Packets within 1800s are one stream.
     stream_nums={}
 
     f=open(filename,'rb')
     
     pcap = dpkt.pcap.Reader(f)
-    i=0    #当前pcap数据包 number
+    i=0    # current pcap packet number
 
 
 
@@ -90,12 +90,12 @@ def out_label_packetstream_tunnel(filename):
             sport=udp.sport
             dport=udp.dport
             if len(dns.qd)>0:
-                # 有请求的域名
+                # requested domain
                 qry_name=dns.qd[0].name
             if len(dns.an)>0:
-                # 有回复
+                # response present
                 for ans in dns.an:
-                    try:  #不管cname
+                    try:  # ignore CNAME
                         an_ip=socket.inet_ntoa(ans.ip)
                         
                         if an_ip not in ip_domains_number:
@@ -128,7 +128,7 @@ def out_label_packetstream_tunnel(filename):
             dport=tcp.dport
             s_stream = tcp.data
             host=''
-            # 定义stream
+            # define stream
             if sip not in src_ips:
                 index=dip+"_"+str(dport)+"_"+sip+str(sport)
                 if index not in ips_ports__stream_startN_startT_endN_endT:
@@ -166,7 +166,7 @@ def out_label_packetstream_tunnel(filename):
             
             if len(s_stream) != 0:
                 # continue
-    ################################ 获得sni 屎山代码勿动 ###################################
+    ################################ Get SNI (do not touch this messy code) ###################################
                 if (s_stream[0]) in {20, 21, 22, 23}:
                     if (s_stream[0]) in {20, 21, 22}:
                         try:
@@ -217,7 +217,7 @@ def out_label_packetstream_tunnel(filename):
                                                         payload=payload[2:]
                                                         server_name_type=int.from_bytes(payload[0:1],byteorder="big")
                                                         if server_name_type!=0:
-                                                            print("错误0")
+                                                            print("Error 0")
                                                         payload=payload[1:]
                                                         server_name_length=int.from_bytes(payload[0:2],byteorder="big")
                                                         payload=payload[2:]
@@ -227,11 +227,11 @@ def out_label_packetstream_tunnel(filename):
                                                         payload=payload[e_length:]
                         except dpkt.ssl.SSL3Exception as exception:
                             pass
-    ################################ 获得sni 屎山代码勿动 ###################################
+    ################################ Get SNI (do not touch this messy code) ###################################
                 else:
                     try:
-                        ## 两个tcp合并怎么办，保存第一个，第二个开始计算
-                        # 经测试，前面有杂数据没有关系。
+                        ## If two TCP segments should be merged: keep the first, then compute with the second.
+                        # Tested: leading junk data is OK.
                         request = dpkt.http.Request(tcp.data)
                         stream_http_data[stream]=[tcp.data,[i]]
                         
@@ -241,15 +241,15 @@ def out_label_packetstream_tunnel(filename):
                         #     host=''
                         # 'http://'+request.headers['host']+request.uri
                     except (dpkt.dpkt.NeedData, dpkt.dpkt.UnpackError):
-                        if stream in stream_http_data and sip in src_ips:  #保证是本地发过去的第二个包
+                        if stream in stream_http_data and sip in src_ips:  # ensure it is the second packet from local
                             try:
                                 request = dpkt.http.Request(stream_http_data[stream][0]+tcp.data)
                                 url=request.uri
                                 host=request.headers.get('host')
                                 if host is None:
                                     host=''
-                                del stream_http_data[stream] #删除缓存，同一条流可能有多个request
-                            except (dpkt.dpkt.NeedData, dpkt.dpkt.UnpackError):  #如果还缺数据，继续缓存
+                                del stream_http_data[stream] # delete cache; one stream may have multiple requests
+                            except (dpkt.dpkt.NeedData, dpkt.dpkt.UnpackError):  # if still missing data, keep caching
                                 stream_http_data[stream][0]+=tcp.data
                                 stream_http_data[stream][1].append(i)
                     
@@ -277,7 +277,7 @@ def out_label_packetstream_tunnel(filename):
             # out_json.write(json.dumps((os.path.basename(filename),ts,sip,sport,dip,dport,protocol))+"\n")
             
 
-##还有剩下的一些缓存，尝试能不能转成host(即request后都是空tcp，就没办法使用缓存了)
+## Remaining cache: try to parse host (empty TCP after request cannot be parsed)
     for stream, http_data in stream_http_data.items():
         try:
             request = dpkt.http.Request(http_data[0])
@@ -293,10 +293,10 @@ def out_label_packetstream_tunnel(filename):
         except:
             pass
 
-    #最后得到的sni会比原来的多，原因是会把重传的包的client hello算进去，但不影响。
+    # Final SNI count can be higher due to retransmitted ClientHello, but it is OK.
 
 
-    # 使用DNS确定域名
+    # Use DNS to determine domain
     for stream,domain_ in stream_domain.copy().items():
         if domain_!='':
             pass
@@ -304,7 +304,7 @@ def out_label_packetstream_tunnel(filename):
             can_break=False
             for domain,numbers_dns in ip_domains_number[stream_ip_number[stream][0]].items():
                 for number_dns in numbers_dns:
-                    if 200 > stream_ip_number[stream][1]-number_dns > 0:  # 200个包以内就视为这个流的DNS查询
+                    if 200 > stream_ip_number[stream][1]-number_dns > 0:  # within 200 packets => DNS for this stream
                         stream_domain[stream]=domain
                         can_break=True
                     if can_break:
@@ -341,7 +341,7 @@ def out_label_packetstream_tunnel(filename):
     out_json.close()
     # tunnel session/connection session, src_ip, src_port, dst_ip, dst_port, start_time, protocol, pcapfilename
 
-# arabeem.co.uk, aquarius-bee.co.uk... 手动确认 --> tunnel session
+# arabeem.co.uk, aquarius-bee.co.uk... manually confirm -> tunnel session
 # other tcp connection with api.honeygain.com, cloudflare-dns.com --> relayed session
 def out_label_honeygain_tunnel(filename):
     # filename=sys.argv[1]
@@ -352,7 +352,7 @@ def out_label_honeygain_tunnel(filename):
 
     number_information={}
 
-    # 处理DNS所需要的变量
+    # Variables needed for DNS processing
     ip_domains_number={}
     ip_domains={}
     domain_ips={}
@@ -361,17 +361,17 @@ def out_label_honeygain_tunnel(filename):
 
     stream_http_data={}
 
-    #当前stream号码
+    # current stream number
     stream_num=0
-    #定义以172.19.0.2放在开头 '172.19.0.2_36450_172.67.74.242_443'--->[]
+    # define stream index starting with 172.19.0.2: '172.19.0.2_36450_172.67.74.242_443' -> []
     ips_ports__stream_startN_startT_endN_endT={}
-    # 定义一个流的方法: src ip port,dst ip port, timestamp:后面的包跟第一个相差时间不超过半小时则视为同一条流。1800s
+    # Stream definition: src ip/port, dst ip/port, timestamp. Packets within 1800s are one stream.
     stream_nums={}
 
     f=open(filename,'rb')
     
     pcap = dpkt.pcap.Reader(f)
-    i=0    #当前pcap数据包 number
+    i=0    # current pcap packet number
 
 
 
@@ -405,12 +405,12 @@ def out_label_honeygain_tunnel(filename):
             sport=udp.sport
             dport=udp.dport
             if len(dns.qd)>0:
-                # 有请求的域名
+                # requested domain
                 qry_name=dns.qd[0].name
             if len(dns.an)>0:
-                # 有回复
+                # response present
                 for ans in dns.an:
-                    try:  #不管cname
+                    try:  # ignore CNAME
                         an_ip=socket.inet_ntoa(ans.ip)
                         
                         if an_ip not in ip_domains_number:
@@ -443,7 +443,7 @@ def out_label_honeygain_tunnel(filename):
             dport=tcp.dport
             s_stream = tcp.data
             host=''
-            # 定义stream
+            # define stream
             if sip not in src_ips:
                 index=dip+"_"+str(dport)+"_"+sip+str(sport)
                 if index not in ips_ports__stream_startN_startT_endN_endT:
@@ -481,7 +481,7 @@ def out_label_honeygain_tunnel(filename):
             
             if len(s_stream) != 0:
                 # continue
-    ################################ 获得sni 屎山代码勿动 ###################################
+    ################################ Get SNI (do not touch this messy code) ###################################
                 if (s_stream[0]) in {20, 21, 22, 23}:
                     if (s_stream[0]) in {20, 21, 22}:
                         try:
@@ -532,7 +532,7 @@ def out_label_honeygain_tunnel(filename):
                                                         payload=payload[2:]
                                                         server_name_type=int.from_bytes(payload[0:1],byteorder="big")
                                                         if server_name_type!=0:
-                                                            print("错误0")
+                                                            print("Error 0")
                                                         payload=payload[1:]
                                                         server_name_length=int.from_bytes(payload[0:2],byteorder="big")
                                                         payload=payload[2:]
@@ -542,11 +542,11 @@ def out_label_honeygain_tunnel(filename):
                                                         payload=payload[e_length:]
                         except dpkt.ssl.SSL3Exception as exception:
                             pass
-    ################################ 获得sni 屎山代码勿动 ###################################
+    ################################ Get SNI (do not touch this messy code) ###################################
                 else:
                     try:
-                        ## 两个tcp合并怎么办，保存第一个，第二个开始计算
-                        # 经测试，前面有杂数据没有关系。
+                        ## If two TCP segments should be merged: keep the first, then compute with the second.
+                        # Tested: leading junk data is OK.
                         request = dpkt.http.Request(tcp.data)
                         stream_http_data[stream]=[tcp.data,[i]]
                         
@@ -556,15 +556,15 @@ def out_label_honeygain_tunnel(filename):
                         #     host=''
                         # 'http://'+request.headers['host']+request.uri
                     except (dpkt.dpkt.NeedData, dpkt.dpkt.UnpackError):
-                        if stream in stream_http_data and sip in src_ips:  #保证是本地发过去的第二个包
+                        if stream in stream_http_data and sip in src_ips:  # ensure it is the second packet from local
                             try:
                                 request = dpkt.http.Request(stream_http_data[stream][0]+tcp.data)
                                 url=request.uri
                                 host=request.headers.get('host')
                                 if host is None:
                                     host=''
-                                del stream_http_data[stream] #删除缓存，同一条流可能有多个request
-                            except (dpkt.dpkt.NeedData, dpkt.dpkt.UnpackError):  #如果还缺数据，继续缓存
+                                del stream_http_data[stream] # delete cache; one stream may have multiple requests
+                            except (dpkt.dpkt.NeedData, dpkt.dpkt.UnpackError):  # if still missing data, keep caching
                                 stream_http_data[stream][0]+=tcp.data
                                 stream_http_data[stream][1].append(i)
                     
@@ -592,7 +592,7 @@ def out_label_honeygain_tunnel(filename):
             # out_json.write(json.dumps((os.path.basename(filename),ts,sip,sport,dip,dport,protocol))+"\n")
             
 
-##还有剩下的一些缓存，尝试能不能转成host(即request后都是空tcp，就没办法使用缓存了)
+## Remaining cache: try to parse host (empty TCP after request cannot be parsed)
     for stream, http_data in stream_http_data.items():
         try:
             request = dpkt.http.Request(http_data[0])
@@ -608,10 +608,10 @@ def out_label_honeygain_tunnel(filename):
         except:
             pass
 
-    #最后得到的sni会比原来的多，原因是会把重传的包的client hello算进去，但不影响。
+    # Final SNI count can be higher due to retransmitted ClientHello, but it is OK.
 
 
-    # 使用DNS确定域名
+    # Use DNS to determine domain
     for stream,domain_ in stream_domain.copy().items():
         if domain_!='':
             pass
@@ -619,7 +619,7 @@ def out_label_honeygain_tunnel(filename):
             can_break=False
             for domain,numbers_dns in ip_domains_number[stream_ip_number[stream][0]].items():
                 for number_dns in numbers_dns:
-                    if 200 > stream_ip_number[stream][1]-number_dns > 0:  # 200个包以内就视为这个流的DNS查询
+                    if 200 > stream_ip_number[stream][1]-number_dns > 0:  # within 200 packets => DNS for this stream
                         stream_domain[stream]=domain
                         can_break=True
                     if can_break:
@@ -655,7 +655,7 @@ def out_label_iproyal_tunnel(filename):
 
     number_information={}
 
-    # 处理DNS所需要的变量
+    # Variables needed for DNS processing
     ip_domains_number={}
     ip_domains={}
     domain_ips={}
@@ -665,17 +665,17 @@ def out_label_iproyal_tunnel(filename):
 
     stream_http_data={}
 
-    #当前stream号码
+    # current stream number
     stream_num=0
-    #定义以172.19.0.2放在开头 '172.19.0.2_36450_172.67.74.242_443'--->[]
+    # define stream index starting with 172.19.0.2: '172.19.0.2_36450_172.67.74.242_443' -> []
     ips_ports__stream_startN_startT_endN_endT={}
-    # 定义一个流的方法: src ip port,dst ip port, timestamp:后面的包跟第一个相差时间不超过半小时则视为同一条流。1800s
+    # Stream definition: src ip/port, dst ip/port, timestamp. Packets within 1800s are one stream.
     stream_nums={}
 
     f=open(filename,'rb')
     
     pcap = dpkt.pcap.Reader(f)
-    i=0    #当前pcap数据包 number
+    i=0    # current pcap packet number
 
 
 
@@ -709,12 +709,12 @@ def out_label_iproyal_tunnel(filename):
             sport=udp.sport
             dport=udp.dport
             if len(dns.qd)>0:
-                # 有请求的域名
+                # requested domain
                 qry_name=dns.qd[0].name
             if len(dns.an)>0:
-                # 有回复
+                # response present
                 for ans in dns.an:
-                    try:  #不管cname
+                    try:  # ignore CNAME
                         an_ip=socket.inet_ntoa(ans.ip)
                         if an_ip not in resolved_ips:
                             resolved_ips.append(an_ip)
@@ -748,7 +748,7 @@ def out_label_iproyal_tunnel(filename):
             dport=tcp.dport
             s_stream = tcp.data
             host=''
-            # 定义stream
+            # define stream
             if sip not in src_ips:
                 index=dip+"_"+str(dport)+"_"+sip+str(sport)
                 if index not in ips_ports__stream_startN_startT_endN_endT:
@@ -786,7 +786,7 @@ def out_label_iproyal_tunnel(filename):
             
             if len(s_stream) != 0:
                 # continue
-    ################################ 获得sni 屎山代码勿动 ###################################
+    ################################ Get SNI (do not touch this messy code) ###################################
                 if (s_stream[0]) in {20, 21, 22, 23}:
                     if (s_stream[0]) in {20, 21, 22}:
                         try:
@@ -837,7 +837,7 @@ def out_label_iproyal_tunnel(filename):
                                                         payload=payload[2:]
                                                         server_name_type=int.from_bytes(payload[0:1],byteorder="big")
                                                         if server_name_type!=0:
-                                                            print("错误0")
+                                                            print("Error 0")
                                                         payload=payload[1:]
                                                         server_name_length=int.from_bytes(payload[0:2],byteorder="big")
                                                         payload=payload[2:]
@@ -847,11 +847,11 @@ def out_label_iproyal_tunnel(filename):
                                                         payload=payload[e_length:]
                         except dpkt.ssl.SSL3Exception as exception:
                             pass
-    ################################ 获得sni 屎山代码勿动 ###################################
+    ################################ Get SNI (do not touch this messy code) ###################################
                 else:
                     try:
-                        ## 两个tcp合并怎么办，保存第一个，第二个开始计算
-                        # 经测试，前面有杂数据没有关系。
+                        ## If two TCP segments should be merged: keep the first, then compute with the second.
+                        # Tested: leading junk data is OK.
                         request = dpkt.http.Request(tcp.data)
                         stream_http_data[stream]=[tcp.data,[i]]
                         
@@ -861,15 +861,15 @@ def out_label_iproyal_tunnel(filename):
                         #     host=''
                         # 'http://'+request.headers['host']+request.uri
                     except (dpkt.dpkt.NeedData, dpkt.dpkt.UnpackError):
-                        if stream in stream_http_data and sip in src_ips:  #保证是本地发过去的第二个包
+                        if stream in stream_http_data and sip in src_ips:  # ensure it is the second packet from local
                             try:
                                 request = dpkt.http.Request(stream_http_data[stream][0]+tcp.data)
                                 url=request.uri
                                 host=request.headers.get('host')
                                 if host is None:
                                     host=''
-                                del stream_http_data[stream] #删除缓存，同一条流可能有多个request
-                            except (dpkt.dpkt.NeedData, dpkt.dpkt.UnpackError):  #如果还缺数据，继续缓存
+                                del stream_http_data[stream] # delete cache; one stream may have multiple requests
+                            except (dpkt.dpkt.NeedData, dpkt.dpkt.UnpackError):  # if still missing data, keep caching
                                 stream_http_data[stream][0]+=tcp.data
                                 stream_http_data[stream][1].append(i)
                     
@@ -897,7 +897,7 @@ def out_label_iproyal_tunnel(filename):
             # out_json.write(json.dumps((os.path.basename(filename),ts,sip,sport,dip,dport,protocol))+"\n")
             
 
-##还有剩下的一些缓存，尝试能不能转成host(即request后都是空tcp，就没办法使用缓存了)
+## Remaining cache: try to parse host (empty TCP after request cannot be parsed)
     for stream, http_data in stream_http_data.items():
         try:
             request = dpkt.http.Request(http_data[0])
@@ -913,10 +913,10 @@ def out_label_iproyal_tunnel(filename):
         except:
             pass
 
-    #最后得到的sni会比原来的多，原因是会把重传的包的client hello算进去，但不影响。
+    # Final SNI count can be higher due to retransmitted ClientHello, but it is OK.
 
 
-    # 使用DNS确定域名
+    # Use DNS to determine domain
     for stream,domain_ in stream_domain.copy().items():
         if domain_!='':
             pass
@@ -924,7 +924,7 @@ def out_label_iproyal_tunnel(filename):
             can_break=False
             for domain,numbers_dns in ip_domains_number[stream_ip_number[stream][0]].items():
                 for number_dns in numbers_dns:
-                    if 200 > stream_ip_number[stream][1]-number_dns > 0:  # 200个包以内就视为这个流的DNS查询
+                    if 200 > stream_ip_number[stream][1]-number_dns > 0:  # within 200 packets => DNS for this stream
                         stream_domain[stream]=domain
                         can_break=True
                     if can_break:
@@ -954,7 +954,7 @@ def out_label_iproyal_tunnel(filename):
     for stream,domain in stream_domain.items():
         information=number_information[stream_nums[stream][0]]
         if information[0] not in src_ips:
-            if information[0] not in resolved_ips:  # 是unresolved ip
+            if information[0] not in resolved_ips:  # unresolved IP
                 tunnel=1
             else:
                 if domain not in src_domains:
@@ -980,17 +980,37 @@ def out_label_iproyal_tunnel(filename):
 
 
 def main():
-    if len(sys.argv)==2:
-        print('正在处理文件:',sys.argv[1])
-        out_label_packetstream_tunnel(sys.argv[1])
-        print('处理文件完成:',sys.argv[1])
-    elif len(sys.argv)==3:
-        if sys.argv[1].find(sys.argv[2])!=-1:
-            print('正在处理文件:',sys.argv[1])
-            out_label_packetstream_tunnel(sys.argv[1])
-            print('处理文件完成:',sys.argv[1])
+    if len(sys.argv) not in (2, 3):
+        print('Usage: python out_label_tunnel.py <pcap file or directory> [filter string]')
+        return
+
+    target_path = sys.argv[1]
+    filter_str = sys.argv[2] if len(sys.argv) == 3 else None
+
+    def should_process(path):
+        if not path.endswith('.pcap'):
+            return False
+        if filter_str is None:
+            return True
+        return os.path.basename(path).find(filter_str) != -1
+
+    if os.path.isdir(target_path):
+        print('Processing directory:', target_path)
+        for root, _, files in os.walk(target_path):
+            for name in files:
+                file_path = os.path.join(root, name)
+                if not should_process(file_path):
+                    continue
+                print('Processing file:', file_path)
+                out_label_packetstream_tunnel(file_path)
+                print('Finished file:', file_path)
+    else:
+        if should_process(target_path):
+            print('Processing file:', target_path)
+            out_label_packetstream_tunnel(target_path)
+            print('Finished file:', target_path)
         else:
-            print('文件:',sys.argv[1]," 未包含字符串:",sys.argv[2])
+            print('File:', target_path, " does not contain string:", filter_str)
 
 if __name__ == "__main__":
     main()

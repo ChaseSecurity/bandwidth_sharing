@@ -1,0 +1,9 @@
+traffic_classifier_scripts/feature_engineering/flow/
+traffic_classifier_scripts/feature_engineering/input_dir/
+traffic_classifier_scripts/feature_engineering/output_dir/
+traffic_classifier_scripts/feature_engineering/split_output/
+traffic_classifier_scripts/feature_engineering/dataset/
+traffic_classifier_scripts/feature_engineering/model/
+**/*.pcap
+**/*.json
+
